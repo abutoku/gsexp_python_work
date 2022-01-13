@@ -160,14 +160,17 @@ function weatherget() {
         console.log(result);
 
         document.getElementById('output').innerHTML = `
-        <div>
+        <div id=weather_contents>
         <h2>今日の天気</h2>
         <p>${result[0].day} ${result[0].week}</p>
         <p>${result[0].weather}</p>
+        <img src=${result[0].image
+    }>
 
         <h2>明日の天気</h2>
         <p>${result[1].day} ${result[1].week}</p>
         <p>${result[1].weather}</p>
+        <img src=${result[1].image}>
         </div>
         `;
 

@@ -58,21 +58,27 @@ def api_weather():
 
         soup = BeautifulSoup(html, "html.parser")
         date = soup.select(".forecastCity td .date span")
-        weater = soup.select(".forecastCity td img")
-
+        weather = soup.select(".forecastCity td img")
+        image = soup.select(".forecastCity td img")
+        
         date = [d.string for d in date]
-        weater = [w["alt"] for w in weater]
+        weather = [w["alt"] for w in weather]
+        image = [i["src"] for i in image]
+        
 
-        pprint('福岡の天気' + date[0] + date[1] + weater[0] + date[2] + date[3] + weater[1])
+        pprint('福岡の天気' + date[0] + date[1] + weather[0] + date[2] + date[3] + weather[1])
+        pprint(image)
         
         result = [{
             "day": date[0],
             "week": date[1],
-            "weather": weater[0]
+            "weather": weather[0],
+            "image": image[0]
         }, {
-            "day": date[0],
-            "week": date[1],
-            "weather": weater[0]
+            "day": date[2],
+            "week": date[3],
+            "weather": weather[1],
+            "image": image[1]
         }]
         
         return json.dumps(result)
