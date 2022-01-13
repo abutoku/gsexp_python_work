@@ -13,6 +13,11 @@ def index():
     """初期画面を表示します."""
     return render_template("index.html")
 
+@app.route("/weather")
+def index_weather():
+    """天気画面を表示します."""
+    return render_template("weather.html")
+
 @app.route("/api/recommend_article")
 def api_recommend_article():
     #はてブのホットエントリーから記事を入手して、ランダムに1件返却
@@ -44,15 +49,34 @@ def api_recommend_article():
     #     "link" : "記事のURLだよー"
     # })
 
-# @app.route("/api/xxxx")
-# def api_xxxx():
-#     """
-#         **** ここを実装します（発展課題） ****
-#         ・自分の好きなサイトをWebスクレイピングして情報をフロントに返却します
-#         ・お天気APIなども良いかも
-#         ・関数名は適宜変更してください
-#     """
-#     pass
+@app.route("/api/weather")
+def api_weather():
+    print('ok')
+    
+    with urlopen("https://weather.yahoo.co.jp/weather/jp/40/8210.html") as res:
+        html = res.read().decode("utf-8")
+
+        soup = BeautifulSoup(html, "html.parser")
+        date = soup.select(".forecastCity td .date span")
+        weater = soup.select(".forecastCity td img")
+
+        date = [d.string for d in date]
+        weater = [w["alt"] for w in weater]
+
+        pprint('福岡の天気' + date[0] + date[1] + weater[0] + date[2] + date[3] + weater[1])
+        
+        result = [{
+            "day": date[0],
+            "week": date[1],
+            "weather": weater[0]
+        }, {
+            "day": date[0],
+            "week": date[1],
+            "weather": weater[0]
+        }]
+        
+        return json.dumps(result)
+        
 
 if __name__ == "__main__":
     app.run(debug=True, port=5004)

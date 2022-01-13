@@ -52,24 +52,24 @@ function handleStartButtonClick() {
 
     // 音声認識の結果を取得した時のイベント.
     recognition.onresult = event => {
-      let text = event.results.item(0).item(0).transcript;
-      let isFinal = event.results.item(0).isFinal;
-      console.log('onresult: ', text, event.results);
+    let text = event.results.item(0).item(0).transcript;
+    let isFinal = event.results.item(0).isFinal;
+    console.log('onresult: ', text, event.results);
 
-      if (!isFinal) {
+    if (!isFinal) {
         return;
-      }
+    }
 
-      if (text.indexOf('ニュース') !== -1) {
+    if (text.indexOf('ニュース') !== -1) {
         // ニュースだったら、API経由でおすすめ記事を取得する.
         showRecommendArticle();
-      
-      } else {
+    
+    } else {
         // ニュース以外はわからないよ〜.
         let synthes = new SpeechSynthesisUtterance('ごめんなさい、ニュース以外はわかりません');
         synthes.lang = "ja-JP";
         speechSynthesis.speak(synthes);
-      }
+    }
     };
 
     // 音声認識を開始します.
@@ -148,3 +148,28 @@ window.addEventListener('DOMContentLoaded', () => {
         document.getElementById('stopButton').onclick = handleStopButtonClick;
     });
 });
+
+
+function weatherget() {
+
+    console.log('start');
+    api('/api/weather').then(response => {
+
+        console.log('ok');
+        let result = JSON.parse(response);
+        console.log(result);
+
+        document.getElementById('output').innerHTML = `
+        <div>
+        <h2>今日の天気</h2>
+        <p>${result[0].day} ${result[0].week}</p>
+        <p>${result[0].weather}</p>
+
+        <h2>明日の天気</h2>
+        <p>${result[1].day} ${result[1].week}</p>
+        <p>${result[1].weather}</p>
+        </div>
+        `;
+
+    });
+}
